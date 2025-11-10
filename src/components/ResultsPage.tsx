@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Navbar from './Navbar';
 import { gsap } from 'gsap';
-import jsPDF from 'jspdf';
 import { 
   Brain, 
   Heart, 
