@@ -12,7 +12,6 @@ import {
   Search,
   ExternalLink,
   Calendar,
-  Users,
   Lightbulb,
   Target,
   Award

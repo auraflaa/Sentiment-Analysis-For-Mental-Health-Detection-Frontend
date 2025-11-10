@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Navbar from './Navbar';
-import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { gsap } from 'gsap';
 import jsPDF from 'jspdf';
 import { 
@@ -9,9 +8,6 @@ import {
   TrendingUp, 
   AlertTriangle, 
   CheckCircle, 
-  ArrowLeft,
-  Download,
-  Share2,
   RefreshCw,
   BarChart3
 } from 'lucide-react';
@@ -40,11 +36,8 @@ interface FinalResult {
 const ResultsPage: React.FC = () => {
   const [finalResult, setFinalResult] = useState<FinalResult | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [isDownloading, setIsDownloading] = useState(false);
-  const [isSharing, setIsSharing] = useState(false);
   
   const resultsRef = useRef<HTMLDivElement>(null);
-  const chartRef = useRef<HTMLDivElement>(null);
   const introRef = useRef<HTMLDivElement>(null);
 
   const calculateFinalResult = useCallback((responses: SurveyResponse[]): FinalResult => {
@@ -388,122 +381,6 @@ const ResultsPage: React.FC = () => {
     }
   };
 
-  const handleDownload = async () => {
-    setIsDownloading(true);
-    try {
-      const pdf = new jsPDF('p', 'mm', 'a4');
-      const pageWidth = pdf.internal.pageSize.getWidth();
-      const pageHeight = pdf.internal.pageSize.getHeight();
-      
-      // Add title
-      pdf.setFontSize(24);
-      pdf.setFont('helvetica', 'bold');
-      pdf.text('Mental Health Assessment Report', pageWidth / 2, 30, { align: 'center' });
-      
-      // Add date
-      pdf.setFontSize(12);
-      pdf.setFont('helvetica', 'normal');
-      pdf.text(`Assessment Date: ${new Date().toLocaleDateString()}`, pageWidth / 2, 40, { align: 'center' });
-      
-      // Add primary condition
-      pdf.setFontSize(18);
-      pdf.setFont('helvetica', 'bold');
-      pdf.text('Primary Assessment', 20, 60);
-      
-      pdf.setFontSize(14);
-      pdf.setFont('helvetica', 'normal');
-      pdf.text(`Condition: ${finalResult?.primaryCondition || 'Unknown'}`, 20, 75);
-      pdf.text(`Confidence: ${Math.round((finalResult?.confidence || 0) * 100)}%`, 20, 85);
-      pdf.text(`Severity: ${finalResult?.severity || 'Unknown'}`, 20, 95);
-      
-      // Add recommendations
-      pdf.setFontSize(16);
-      pdf.setFont('helvetica', 'bold');
-      pdf.text('Recommendations', 20, 115);
-      
-      pdf.setFontSize(12);
-      pdf.setFont('helvetica', 'normal');
-      let yPosition = 130;
-      finalResult?.recommendations.forEach((rec, index) => {
-        if (yPosition > pageHeight - 20) {
-          pdf.addPage();
-          yPosition = 20;
-        }
-        pdf.text(`${index + 1}. ${rec}`, 20, yPosition);
-        yPosition += 8;
-      });
-      
-      // Add resources
-      if (yPosition > pageHeight - 40) {
-        pdf.addPage();
-        yPosition = 20;
-      }
-      
-      pdf.setFontSize(16);
-      pdf.setFont('helvetica', 'bold');
-      pdf.text('Resources', 20, yPosition);
-      yPosition += 15;
-      
-      pdf.setFontSize(12);
-      pdf.setFont('helvetica', 'normal');
-      finalResult?.resources.forEach((resource, index) => {
-        if (yPosition > pageHeight - 20) {
-          pdf.addPage();
-          yPosition = 20;
-        }
-        pdf.text(`${index + 1}. ${resource}`, 20, yPosition);
-        yPosition += 8;
-      });
-      
-      // Add disclaimer
-      if (yPosition > pageHeight - 60) {
-        pdf.addPage();
-        yPosition = 20;
-      }
-      
-      pdf.setFontSize(14);
-      pdf.setFont('helvetica', 'bold');
-      pdf.text('Important Disclaimer', 20, yPosition);
-      yPosition += 10;
-      
-      pdf.setFontSize(10);
-      pdf.setFont('helvetica', 'normal');
-      const disclaimer = "This assessment is for educational and awareness purposes only. It is not a substitute for professional medical advice, diagnosis, or treatment. If you're experiencing a mental health crisis, please contact emergency services or a crisis hotline immediately.";
-      pdf.text(disclaimer, 20, yPosition, { maxWidth: pageWidth - 40 });
-      
-      // Save the PDF
-      pdf.save(`mental-health-assessment-${new Date().toISOString().split('T')[0]}.pdf`);
-      
-    } catch (error) {
-      console.error('Error generating PDF:', error);
-      alert('Unable to generate PDF report.\n\nPlease try again. If the problem continues, you can take a screenshot or copy the results manually.');
-    } finally {
-      setIsDownloading(false);
-    }
-  };
-
-  const handleShare = async () => {
-    setIsSharing(true);
-    try {
-      if (navigator.share) {
-        await navigator.share({
-          title: 'Mental Health Assessment Results',
-          text: `My mental health assessment shows ${finalResult?.primaryCondition} with ${Math.round((finalResult?.confidence || 0) * 100)}% confidence.`,
-          url: window.location.href
-        });
-      } else {
-        // Fallback: copy to clipboard
-        const shareText = `Mental Health Assessment Results:\n\nPrimary Condition: ${finalResult?.primaryCondition}\nConfidence: ${Math.round((finalResult?.confidence || 0) * 100)}%\nSeverity: ${finalResult?.severity}\n\nView full results: ${window.location.href}`;
-        await navigator.clipboard.writeText(shareText);
-        alert('Assessment results copied to clipboard!\n\nYou can now paste them in any app or document.');
-      }
-    } catch (error) {
-      console.error('Error sharing results:', error);
-      alert('Unable to share results.\n\nPlease try again. You can also copy the results manually or take a screenshot.');
-    } finally {
-      setIsSharing(false);
-    }
-  };
 
   // Build chart data with safe minimums so the pie is never invisible
   let chartData = (finalResult?.allConditions || []).map(condition => {
@@ -526,7 +403,6 @@ const ResultsPage: React.FC = () => {
     }
   }
 
-  const COLORS = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6'];
 
 const PastAssessments: React.FC = () => {
   try {

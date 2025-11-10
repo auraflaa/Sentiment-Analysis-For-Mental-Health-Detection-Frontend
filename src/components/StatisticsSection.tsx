@@ -16,64 +16,6 @@ interface StatData {
   trend?: string;
 }
 
-// Statistics based on WHO World Mental Health Report 2022, WHO Global Health Estimates 2024
-// Sources: WHO, NIMH, Lancet Psychiatry 2024
-const statisticsData: StatData[] = [
-  {
-    id: 1,
-    title: "Global Mental Health Impact",
-    value: "970M+",
-    description: "people worldwide live with a mental disorder (WHO 2024). Approximately 1 in 8 people globally are affected",
-    icon: <Users className="w-12 h-12" />,
-    color: "from-blue-500 to-cyan-500",
-    trend: "Source: WHO Global Health Estimates 2024"
-  },
-  {
-    id: 2,
-    title: "Depression Prevalence",
-    value: "280M",
-    description: "people globally suffer from depression (WHO 2024). Depression is the leading cause of disability worldwide, affecting more than 3.8% of the population",
-    icon: <Brain className="w-12 h-12" />,
-    color: "from-purple-500 to-pink-500",
-    trend: "WHO Global Health Estimates 2024"
-  },
-  {
-    id: 3,
-    title: "Anxiety Disorders",
-    value: "301M",
-    description: "people affected by anxiety disorders globally (WHO 2024). Women are approximately 2.3 times more likely than men to experience anxiety disorders",
-    icon: <Heart className="w-12 h-12" />,
-    color: "from-green-500 to-emerald-500",
-    trend: "WHO Mental Health Atlas 2024"
-  },
-  {
-    id: 4,
-    title: "Treatment Gap",
-    value: "88%",
-    description: "treatment gap in low-income countries (WHO Mental Health Atlas 2020). Only 12% of people with mental disorders receive treatment in low-income countries, compared to 70% in high-income countries",
-    icon: <TrendingUp className="w-12 h-12" />,
-    color: "from-orange-500 to-red-500",
-    trend: "WHO Mental Health Atlas 2020"
-  },
-  {
-    id: 5,
-    title: "Youth Mental Health",
-    value: "50%",
-    description: "of all mental health conditions start by age 14, and 75% develop by age 24 (WHO 2024). Suicide is the fourth leading cause of death among 15-29 year-olds globally",
-    icon: <Users className="w-12 h-12" />,
-    color: "from-indigo-500 to-blue-500",
-    trend: "WHO World Mental Health Report 2022"
-  },
-  {
-    id: 6,
-    title: "Suicide Statistics",
-    value: "700K+",
-    description: "deaths by suicide annually worldwide (WHO 2024). One in every 100 deaths is by suicide, making it a critical global public health priority",
-    icon: <TrendingUp className="w-12 h-12" />,
-    color: "from-red-500 to-pink-500",
-    trend: "WHO Suicide Prevention Report 2024"
-  }
-];
 
 // Chart data for visualizations - Based on WHO 2024 Mental Health Report
 // Source: WHO Global Health Estimates 2024, World Mental Health Report 2022
@@ -107,59 +49,6 @@ const whoVisuals = {
   conditionsBar: '/images/insights/Mental Health Disorders Ranked.png',
   onsetPie: '/images/insights/Mental Health Disorder distribution among Age and Gender.png',
   treatmentGapStacked: '/images/insights/burden-disease-from-each-mental-illness.png',
-};
-
-const StatCard: React.FC<{ stat: StatData; index: number }> = ({ stat, index }) => {
-  const cardRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (cardRef.current) {
-      gsap.fromTo(cardRef.current,
-        { opacity: 0, y: 50, scale: 0.9 },
-        {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          duration: 0.8,
-          delay: index * 0.1,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: cardRef.current,
-            start: "top 85%",
-            toggleActions: "play none none reverse"
-          }
-        }
-      );
-    }
-  }, [index]);
-
-  return (
-    <div ref={cardRef} className="h-full">
-      <div className="stat-card card h-full bg-stone-50/95 backdrop-blur-sm border border-stone-200/60 shadow-2xl hover:shadow-[0_25px_50px_-12px_rgba(99,102,241,0.25)] hover:border-primary-300/60 hover:-translate-y-3 hover:scale-[1.03] transition-all duration-300 ease-out group">
-        <div className={`w-20 h-20 rounded-2xl bg-gradient-to-br ${stat.color} flex items-center justify-center text-white mb-6 group-hover:scale-130 group-hover:rotate-6 group-hover:shadow-lg transition-all duration-300 ease-out`}>
-          {stat.icon}
-        </div>
-        
-        <h3 className="text-2xl font-bold text-slate-800 mb-3 group-hover:text-primary-600 group-hover:translate-x-1 transition-all duration-300 ease-out">
-          {stat.title}
-        </h3>
-        
-        <div className="text-4xl font-bold text-gradient mb-4">
-          {stat.value}
-        </div>
-        
-        <p className="text-gray-600 leading-relaxed mb-4">
-          {stat.description}
-        </p>
-        
-        {stat.trend && (
-          <div className="text-sm font-medium text-gray-500 bg-gray-100 px-3 py-1 rounded-full inline-block">
-            {stat.trend}
-          </div>
-        )}
-      </div>
-    </div>
-  );
 };
 
 const StatisticsSection: React.FC = () => {
