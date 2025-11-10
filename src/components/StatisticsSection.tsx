@@ -6,17 +6,6 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 
 gsap.registerPlugin(ScrollTrigger);
 
-interface StatData {
-  id: number;
-  title: string;
-  value: string;
-  description: string;
-  icon: React.ReactNode;
-  color: string;
-  trend?: string;
-}
-
-
 // Chart data for visualizations - Based on WHO 2024 Mental Health Report
 // Source: WHO Global Health Estimates 2024, World Mental Health Report 2022
 const mentalHealthChartData = [
