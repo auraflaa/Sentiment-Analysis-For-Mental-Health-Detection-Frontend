@@ -1,0 +1,12 @@
+export { default as LandingPage } from './LandingPage';
+export { default as SurveyPage } from './SurveyPage';
+export { default as ResultsPage } from './ResultsPage';
+export { default as StatisticsSection } from './StatisticsSection';
+export { default as ResourcesSection } from './ResourcesSection';
+export { default as ResourcesPage } from './ResourcesPage';
+export { default as ResearchPage } from './ResearchPage';
+export { default as PastAssessmentsPage } from './PastAssessmentsPage';
+export { default as Footer } from './Footer';
+export { default as PrivacyPolicy } from './PrivacyPolicy';
+export { default as TermsOfService } from './TermsOfService';
+export { default as Disclaimer } from './Disclaimer';
